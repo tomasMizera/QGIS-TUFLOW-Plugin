@@ -18,9 +18,11 @@ from tuflow.tuflowqgis_dialog import tuflowqgis_scenarioSelection_dialog, tuflow
 from tuflow.tuflowqgis_tuviewer.tuflowqgis_tuanimation import TuAnimationDialog
 from tuflow.tuflowqgis_tuviewer.tuflowqgis_tumap import TuMapDialog
 from tuflow.tuflowqgis_tuviewer.tuflowqgis_turesults import TuResults
+from tuflow.TUFLOW_particles_results import TuflowParticles
 
 
 class TuMenuFunctions():
+	fileLoadedSignal = pyqtSignal(str)
 	"""
 	Generic class for handling menu functions.
 	
@@ -251,7 +253,28 @@ class TuMenuFunctions():
 		settings.setValue("TUFLOW_Results/lastFolder", fpath)
 		
 		return True
-	
+
+	def loadScatteredData(self):
+		"""
+		Loads Particles data from NetCDF File.
+
+		:return: bool -> True for successful, False for unsuccessful
+		"""
+
+		# Get last loaded settings
+		fpath = loadLastFolder(self.tuView.currentLayer, "TUFLOW_Results/lastFolder")
+
+		# User get TCF file
+		inFileNames = QFileDialog.getOpenFileNames(self.iface.mainWindow(), 'Open TUFLOW results file',
+												   fpath,
+												   "All Available (*.nc);;TUFLOW Result - Particles (*.nc)")
+
+		if not inFileNames[0]:  # empty list
+			return False
+
+		self.tuView.scatteredFileLoaded.emit(inFileNames[0])
+
+
 	def remove1d2dResults(self):
 		"""
 		Removes the selected results from the ui.

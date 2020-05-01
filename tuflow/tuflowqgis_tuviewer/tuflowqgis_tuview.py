@@ -19,9 +19,10 @@ from tuflow.tuflowqgis_tuviewer.tuflowqgis_tumenucontext import TuContextMenu
 from tuflow.tuflowqgis_tuviewer.tuflowqgis_tuproject import TuProject
 from tuflow.tuflowqgis_library import tuflowqgis_find_layer, findAllMeshLyrs, convertTimeToFormattedTime
 from tuflow.tuflowqgis_dialog import tuflowqgis_meshSelection_dialog
-
+from tuflow.TUFLOW_particles_results import TuflowParticles
 
 class TuView(QDockWidget, Ui_Tuplot):
+	scatteredFileLoaded = pyqtSignal(str)
 	
 	def __init__(self, iface, **kwargs):
 		
@@ -47,6 +48,9 @@ class TuView(QDockWidget, Ui_Tuplot):
 		
 		# plot class
 		self.tuPlot = tuflowqgis_tuplot.TuPlot(self)
+
+		# scattered data viewer
+		self.tuflowParticlesResults = TuflowParticles(self)
 		
 		# main menu bar
 		removeTuview = kwargs['removeTuview'] if 'removeTuview' else None
