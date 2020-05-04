@@ -28,7 +28,7 @@ class NetCDFParticlesParser:
             return False
 
         try:
-            self._fill_times_arr()
+            self.__fill_times_arr()
         except KeyError:
             # probably some wrong file?
             self.nc = None
@@ -43,11 +43,11 @@ class NetCDFParticlesParser:
         return all(must_var in variables for must_var in mandatory_variables)
 
     def get_all_variable_names(self):
-        vars = list(self.nc.variables.keys())
+        dataset_vars = list(self.nc.variables.keys())
         ignore_vars = ['Time', 'x', 'y', 'z']
 
         ret_vars = []
-        for var in vars:
+        for var in dataset_vars:
             if var in ignore_vars:
                 continue
 
@@ -81,7 +81,7 @@ class NetCDFParticlesParser:
             if var in ignored_vars:  # if variable should be ignored, e.g. Time
                 continue
             if self.nc.variables[var].ndim == 1:  # 1D variable
-                data[var] = self.nc.variables[var][at_time].data  # TODO: repeat this value for num of particle times
+                data[var] = self.nc.variables[var][:].data
             elif self.nc.variables[var].ndim == 2:  # 2D variable
                 data[var] = self.nc.variables[var][at_time, :].data
             elif self.nc.variables[var].ndim == 3:  # 3D variable
@@ -129,7 +129,7 @@ class NetCDFParticlesParser:
 
         return timedateDict
 
-    def _build_time_string(self):
+    def __build_time_string(self):
         self.time_string = None
         units = self.nc.variables['Time'].units
         name = self.nc.variables['Time'].long_name
@@ -152,8 +152,8 @@ class NetCDFParticlesParser:
 
         self.time_string = time_string
 
-    def _fill_times_arr(self):
-        self._build_time_string()
+    def __fill_times_arr(self):
+        self.__build_time_string()
         time_data = self.nc.variables['Time'][:].data
         self.timesteps_count = self.nc.variables['Time'].shape[0]
 

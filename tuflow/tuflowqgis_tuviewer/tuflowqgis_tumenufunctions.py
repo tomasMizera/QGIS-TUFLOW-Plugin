@@ -18,7 +18,6 @@ from tuflow.tuflowqgis_dialog import tuflowqgis_scenarioSelection_dialog, tuflow
 from tuflow.tuflowqgis_tuviewer.tuflowqgis_tuanimation import TuAnimationDialog
 from tuflow.tuflowqgis_tuviewer.tuflowqgis_tumap import TuMapDialog
 from tuflow.tuflowqgis_tuviewer.tuflowqgis_turesults import TuResults
-from tuflow.TUFLOW_particles_results import TuflowParticles
 
 
 class TuMenuFunctions():
@@ -264,8 +263,8 @@ class TuMenuFunctions():
 		# Get last loaded settings
 		fpath = loadLastFolder(self.tuView.currentLayer, "TUFLOW_Results/lastFolder")
 
-		# User get TCF file
-		inFileNames = QFileDialog.getOpenFileNames(self.iface.mainWindow(), 'Open TUFLOW results file',
+		# User get particles file
+		inFileNames = QFileDialog.getOpenFileName(self.iface.mainWindow(), 'Open TUFLOW results file',
 												   fpath,
 												   "All Available (*.nc);;TUFLOW Result - Particles (*.nc)")
 
@@ -273,6 +272,13 @@ class TuMenuFunctions():
 			return False
 
 		self.tuView.scatteredFileLoaded.emit(inFileNames[0])
+
+		# finally save the last folder location
+		fpath = os.path.dirname(inFileNames[0])
+		settings = QSettings()
+		settings.setValue("TUFLOW_Results/lastFolder", fpath)
+
+		return True
 
 
 	def remove1d2dResults(self):

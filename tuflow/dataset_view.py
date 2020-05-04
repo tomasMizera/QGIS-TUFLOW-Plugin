@@ -100,7 +100,9 @@ class DataSetModel(QAbstractItemModel):
         self.rootItem.appendChild(self.mapOutputsItem)
         self.timeSeriesItem = DataSetTreeNode(0, 'Time Series', 3, False, False, self.rootItem)
         self.rootItem.appendChild(self.timeSeriesItem)
-		
+        self.scatteredItem = DataSetTreeNode(0, 'Scattered Data', 3, False, False, self.rootItem)
+        self.rootItem.appendChild(self.scatteredItem)
+
         self.setMesh(meshDatasets)
         self.setTimeSeries(timeSeriesDatasets)
 
